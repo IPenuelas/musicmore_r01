@@ -1,0 +1,51 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block content %} 
+<div class="row">
+    <div class="col-12 col-xl-12">
+        <div class="card">
+            <div class="card-header"> 
+                <a class="btn btn-info btn-sm float-right" href="{% url 'shop:list' %}">Continuar Comprando</a>                
+                <h5 class="card-title">Mi Carrito</h5>
+                <h6 class="card-subtitle text-muted">Listado de productos de mi Carrito.</h6>                
+            </div>            
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th style="width:20%;">Producto</th>
+                        <th style="width:50%">Descripcion</th>                        
+                        <th style="width:10%">Cantidad</th>
+                        <th class="d-none d-md-table-cell width:25%">Precio - MXN</th>
+                        <th>Acciones</th>
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cart_item in CTX_CART_ITEMS %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'shop:detail' cart_item.product.name %}">
+                                <img src="{{cart_item.product.image.url}}" width="48" height="48" class="rounded-circle mr-2" alt="Avatar"> {{cart_item.product.name}}
+                            </a>
+                        </td>
+                        <td>{{cart_item.product.description|safe}}</td>                        
+                        <td class="d-none d-md-table-cell align-middle">{{cart_item.quantity}}</td> 
+                        <td class="d-none d-md-table-cell">${{cart_item.sub_total|floatformat:2|intcomma}}</td>
+                        <td class="table-action">                            
+                            <a href="{% url 'cart:add_cart' cart_item.product.id %}"><i class="align-middle mr-2" data-feather="plus-circle"></i></a>
+                            <a href="{% url 'cart:remove_cart' cart_item.product.id %}"><i class="align-middle mr-2" data-feather="minus-circle"></i></a>
+                        </td>
+                    </tr>
+                    {% endfor %}                                     
+                </tbody>                
+            </table>
+            <div class="card-footer">
+                <a class="text-dark float-right">Total: ${{total|floatformat:2|intcomma}} MXN </a> 
+                <br> 
+                <a href="#" class="btn btn-success btn-sm float-right">Generar Orden de Venta</a>                                               
+            </div>  
+        </div>
+    </div>
+{% endblock %}
